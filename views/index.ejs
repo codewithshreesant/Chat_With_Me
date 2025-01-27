@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+    <style>
+        .send {
+            background-color: #3160ad;
+            /* Green */
+            border: none;
+            color: white;
+            padding: 8px 32px;
+            text-align: center;
+            text-decoration: none;
+            display: inline-block;
+            font-size: 16px;
+            margin: 4px 2px;
+            cursor: pointer;
+            border-radius: 12px;
+            box-shadow: 0 5px #666;
+            transition: all 0.2s ease-in-out;
+        }
+
+        .send:hover {
+            background-color: #45a049;
+        }
+
+        .send:active {
+            box-shadow: 0 2px #666;
+            transform: translateY
+        }
+
+        input[type="text"] {
+            width: 300px;
+            padding: 10px 15px;
+            margin: 10px 0;
+            box-sizing: border-box;
+            font-size: 16px;
+            border: 2px solid #ccc;
+            border-radius: 10px;
+            box-shadow: inset 0 1px 3px rgba(0, 0, 0, 0.12), inset 0 1px 2px rgba(0, 0, 0, 0.24);
+            transition: all 0.3s ease-in-out;
+        }
+
+        input[type="text"]:focus {
+            border: 2px solid #4CAF50;
+            /* Green */
+            box-shadow: 0 0 5px rgba(76, 175, 80, 0.5);
+            outline: none;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+
+        .result {
+            width: 80%;
+            padding: 20px;
+            background-color: #ffffff;
+            border-radius: 10px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            border: 2px solid #4CAF50;
+            /* Green */
+            margin: 20px auto;
+            overflow-y: auto;
+            max-height: 500px;
+            font-size: 1.2rem;
+            /* Adjust as needed */
+        }
+
+        .result p {
+            font-size: 1.2em;
+            color: #333;
+            /* Dark text color */
+            line-height: 1.6;
+            margin: 10px 0;
+            text-align: justify;
+        }
+
+        .styled-heading {
+            font-size: 2.5em;
+            color: #ffffff;
+            /* White */
+            text-shadow: 2px 2px 4px rgba(0, 0, 0, 0.2);
+            background-image: linear-gradient(to right, #f0f0f0 0%, #f0f0f0 50%, #4CAF50 50%);
+            background-size: 200% 100%;
+            background-position: 100% 0;
+            transition: background-position 0.5s ease-in-out;
+            padding: 10px 20px;
+            border-radius: 8px;
+            border: 2px solid #4CAF50;
+            text-align: center;
+        }
+
+        .styled-heading:hover {
+            background-position: 0 0;
+            color: #000;
+            /* Black */
+        }
+    </style>
+</head>
+
+<body>
+    <div class="container">
+        <h1 class="styled-heading"> Hi How can I help you ? </h1>
+        <div>
+            <input type="text" id="prompt" placeholder="give the prompt..">
+            <button onclick="getResult()" class="send"> send </button>
+        </div>
+        <div class="load">
+            
+        </div>
+        <div class="result">
+
+        </div>
+    </div>
+
+    <script>
+        async function getResult() {
+            document.getElementsByClassName('result')[0].innerText="getting response..."
+            const prompt = document.getElementById('prompt').value;
+            console.log("prompt: ", prompt);
+            await fetch('/data', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json'
+                },
+                body: JSON.stringify({ prompt: prompt })
+            })
+                .then(response => response.json())
+                .then(data => {
+                    document.getElementsByClassName('result')[0].innerText = '';
+                    const newp=document.createElement('p');
+                    newp.innerText = data.response;
+                    document.getElementsByClassName('result')[0].appendChild(newp);
+                })
+                .catch(error => console.log("Error: ", error));
+        }
+    </script>
+
+</body>
+
+</html>
